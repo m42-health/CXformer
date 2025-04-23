@@ -11,9 +11,9 @@
 
 ---
 
-## 🔬 Overview
+## 🔬 Abstract
 
-**CXFormer** is a self-supervised foundation model family tailored for **Chest X-ray (CXR)** analysis. Built on top of DINOv2 and adapted with domain-specific optimizations, CXFormer delivers **SOTA** performance on multiple medical imaging tasks while being compute-efficient.
+Recent advancements in multimodal transformers have shown remarkable success in computer vision and natural language tasks, yet their adaptation to the clinical world remains challenging. We introduce CXformer, a vision transformer adapted for chest X-ray analysis, through systematic investigation of architectural choices and training modifications from DINOv2. Our empirical results show that using registers in ViT training, centering the teacher model's softmax outputs, and optimizing the number of heads leads to better performance. The small version of CXformer(S) (22M parameters) achieves 83.28\% mean AUROC on CheXpert test set, surpassing the baseline of 80.46\% achieved with vanilla DINOv2 settings. Contrary to common assumptions, our larger model CXformer(B) with 87M parameters shows similar performance at 84\% mean AUROC on CheXpert, suggesting that training optimizations matter more than model size. Furthermore compared to the current state-of-the-art RAD-DINO, our CXformer(B), with 46\% reduced pretraining compute (in FLOPs) achieves an average AUROC of 87.93\% (vs 87.32\% by RAD-DINO) on pathology image classification task evaluated across three widely used CXR datasets i.e. CheXpert, RSNA Pneumonia, and NIH CXR8. Beyond classification, CXformer also delivers competitive, and occasionally superior, performance in semantic segmentation and radiology report generation, underscoring its versatility. By open-sourcing our model checkpoints, we aim to promote reproducibility, reduce resource barriers, and advance scalable solutions for medical imaging research.
 
 Key Contributions:
 - Register-enhanced ViT with fewer prototype heads
