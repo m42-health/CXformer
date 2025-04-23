@@ -1,0 +1,48 @@
+dino:
+  head_n_prototypes: 131072
+  head_bottleneck_dim: 384
+ibot:
+  separate_head: true
+  head_n_prototypes: 131072
+train:
+  OFFICIAL_EPOCH_LENGTH: 185 # assuming 2 gpus
+  batch_size_per_gpu: 32 #52
+  num_workers: 12
+  datasets:
+    - dataset_name: CheX_Dataset
+      imgpath: /data/vision/cxr/chexpert
+      views: ['PA', 'AP']
+      csvpath: /data/vision/cxr/chexpert/labels_subset/train_frac_0.1.csv # 19,174
+      unique_patients: False
+      hist_equalize: True
+      transform:
+        - torchvision.transforms.Grayscale(num_output_channels=3) # make it RGB
+  centering: sinkhorn_knopp
+student:
+  arch: vit_small
+  patch_size: 14
+  drop_path_rate: 0.0 # For ViT B, hyperparam from DINOV2 paper, Table 16
+  ffn_layer: mlp # Changed from the default value swiglufused. Pretrained models are trained with mlp, not swiglufused!
+  block_chunks: 0
+  pretrained_weights: /home/ahmed/projects/cxr-foundation/dinov2_cxr/pretrained_models/dinov2_vits14_pretrain.pth
+teacher:
+  momentum_teacher: 0.994
+  pretrained_weights: /home/ahmed/projects/cxr-foundation/dinov2_cxr/pretrained_models/dinov2_vits14_pretrain.pth
+optim:
+  epochs: 50
+  weight_decay: 0.04 # DINOV2 paper, Table 16
+  weight_decay_end: 0.2 # DINOV2 paper, Table 16
+  base_lr: 5.0e-04  # 2.0e-04 # learning rate for a batch size of 1024
+  warmup_epochs: 10 # should be 100k iterations (DINOV2 paper, Table 16)
+  layerwise_decay: 1.0
+  accumulate_grad_batches: 4
+crops:
+  global_crops_scale:
+  - 0.32
+  - 1.0
+  local_crops_number: 8
+  local_crops_scale:
+  - 0.05
+  - 0.32
+  global_crops_size: 518
+  local_crops_size: 98

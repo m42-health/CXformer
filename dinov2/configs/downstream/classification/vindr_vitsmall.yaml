@@ -1,0 +1,55 @@
+student:
+  arch: vit_small
+  patch_size: 14
+  num_register_tokens: 4
+crops:
+  global_crops_size: 518
+  local_crops_size: 98
+train:
+  datasets:
+    - dataset_name: VinDR_Dataset
+      imgpath: /data/vision/cxr/vindr-cxr/1.0.0/train_jpegs
+      csvpath: /data/vision/cxr/vindr-cxr/1.0.0/annotations/image_labels_train.csv
+      hist_equalize: True
+      pathologies:
+        - Lung Opacity
+        - Cardiomegaly
+        - Pleural thickening
+        - Aortic enlargement
+        - Pulmonary fibrosis
+        - Tuberculosis
+        - Pleural effusion
+      transform:
+        - torchvision.transforms.Grayscale(num_output_channels=3) # make it RGB
+val:
+  datasets:
+    - dataset_name: VinDR_Dataset
+      imgpath: /data/vision/cxr/vindr-cxr/1.0.0/train_jpegs
+      csvpath: /data/vision/cxr/vindr-cxr/1.0.0/annotations/image_labels_train.csv
+      hist_equalize: True
+      pathologies:
+        - Lung Opacity
+        - Cardiomegaly
+        - Pleural thickening
+        - Aortic enlargement
+        - Pulmonary fibrosis
+        - Tuberculosis
+        - Pleural effusion
+      transform:
+        - torchvision.transforms.Grayscale(num_output_channels=3) # make it RGB
+test:
+  datasets:
+    - dataset_name: VinDR_Dataset
+      imgpath: /data/vision/cxr/vindr-cxr/1.0.0/test_jpegs
+      csvpath: /data/vision/cxr/vindr-cxr/1.0.0/annotations/image_labels_test.csv
+      hist_equalize: True
+      pathologies:
+        - Lung Opacity
+        - Cardiomegaly
+        - Pleural thickening
+        - Aortic enlargement
+        - Pulmonary fibrosis
+        - Tuberculosis
+        - Pleural effusion
+      transform:
+        - torchvision.transforms.Grayscale(num_output_channels=3) # make it RGB

@@ -1,0 +1,86 @@
+dino:
+  head_n_prototypes: 16384
+  head_bottleneck_dim: 384
+ibot:
+  separate_head: true
+  head_n_prototypes: 16384
+train:
+  OFFICIAL_EPOCH_LENGTH: 611
+  batch_size_per_gpu: 64
+  num_workers: 16
+  datasets:
+    - dataset_name: CheX_Dataset # 626613
+      imgpath: /data/vision/cxr/chexpert
+      views: ['PA', 'AP']
+      csvpath: /data/vision/cxr/chexpert/train.csv
+      unique_patients: False
+      hist_equalize: True
+      transform:
+        - torchvision.transforms.Grayscale(num_output_channels=3)
+    - dataset_name: MIMIC_Dataset
+      csvpath: /data/vision/cxr/mimic-cxr-jpg/2.0.0/train_mimic-cxr-2.0.0-chexpert.csv.gz
+      metacsvpath: /data/vision/cxr/mimic-cxr-jpg/2.0.0/train_mimic-cxr-2.0.0-metadata.csv.gz
+      imgpath: /data/vision/cxr/mimic-cxr-jpg/2.0.0/files
+      views: ['PA', 'AP']
+      unique_patients: False
+      hist_equalize: True
+      transform:
+        - torchvision.transforms.Grayscale(num_output_channels=3)
+    - dataset_name: PC_Dataset
+      csvpath: /data/vision/cxr/padchest/PADCHEST_chest_x_ray_images_labels_160K_01.02.19_remove_corrupt.csv.gz
+      imgpath: /data/vision/cxr/padchest/BIMCV-PadChest-FULL_jpegs
+      views: ['PA', 'AP','AP Supine'] # AP Supine
+      unique_patients: False
+      hist_equalize: True
+      transform:
+        - torchvision.transforms.Grayscale(num_output_channels=3)   
+    - dataset_name: NIH_Dataset
+      csvpath: /data/vision/cxr/cxr8/Data_Entry_2017_v2020_TRAIN.csv
+      imgpath: /data/vision/cxr/cxr8/images_jpegs/
+      views: ['PA', 'AP']
+      unique_patients: False
+      hist_equalize: True
+      transform:
+        - torchvision.transforms.Grayscale(num_output_channels=3)   
+    - dataset_name: BRAX
+      csvpath: /data/vision/cxr/brax/1.1.0/master_spreadsheet_update_remove_corrupted.csv
+      imgpath: /data/vision/cxr/brax/1.1.0/imagesـjpegs/
+      views: ['PA', 'AP']
+      unique_patients: False
+      hist_equalize: True
+      transform:
+        - torchvision.transforms.Grayscale(num_output_channels=3)   
+  centering: centering
+student:
+  arch: vit_small
+  num_register_tokens: 4
+  patch_size: 14
+  drop_path_rate: 0.0 # For ViT, hyperparam from DINOV2 paper, Table 16
+  ffn_layer: mlp # Changed from the default value swiglufused. ViTB models are trained with mlp, not swiglufused (DINOV2 paper, table 16)
+  block_chunks: 0
+  pretrained_weights: /models_vision/scan42/scan42-small/pytorch-model/teacher_checkpoint.pth #/home/ahmed/projects/cxr-foundation/dinov2_cxr/pretrained_models/dinov2_vits14_reg4_pretrain.pth # can be downloaded from https://github.com/facebookresearch/dinov2
+teacher:
+  momentum_teacher: 0.999
+  final_momentum_teacher: 0.999
+  pretrained_weights: /models_vision/scan42/scan42-small/pytorch-model/teacher_checkpoint.pth #/home/ahmed/projects/cxr-foundation/dinov2_cxr/pretrained_models/dinov2_vits14_reg4_pretrain.pth
+optim:
+  epochs: 2 #100
+  weight_decay: 0.0 
+  weight_decay_end: 0.0 
+  base_lr: 3.0e-04 
+  warmup_epochs: 1 #10 # should be 100k iterations (DINOV2 paper, Table 16)
+  freeze_last_layer_epochs: 1
+  layerwise_decay: 1.0
+  accumulate_grad_batches: 1
+crops:
+  global_crops_scale:
+  - 0.32
+  - 1.0
+  local_crops_number: 8
+  local_crops_scale:
+  - 0.05
+  - 0.32
+  global_crops_size: 518
+  local_crops_size: 98
+evaluation:
+  eval_period_iterations: 2500
