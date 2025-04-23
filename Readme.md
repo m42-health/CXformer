@@ -97,7 +97,7 @@ You can fine-tune **CXFormer** on downstream image classification tasks such as 
 #### 🚀 Run Image classification finetuning (CheXpert Dataset)
 
 ```bash
-sh scripts/finetuning/ft_CXFormer_chexpert.sh
+sh scripts/finetuning/image_classification/ft_CXFormer_chexpert.sh
 ```
 <details>
   <summary><i>This script internally runs the following:</i></summary>
@@ -130,16 +130,19 @@ output_ablations_new/finetune/CXFormer_chexpert/
 ```
 </details>
 
+#### 🚀 Run Image Segmentation finetuning (Mimic ChexMask Dataset)
 
 ```bash
-# Segmentation
-# python train_finetune.py --task segmentation --config configs/chexmask.yaml
+sh scripts/finetuning/segmentation/cxformer_chexmask.sh
 ```
 
-```bash
+#### 🚀 For radiology report generation
+We refer interested readers to llava repo as we straightaway used it in our work.
+
+<!-- ```bash
 # # Report generation
 # python train_finetune.py --task report_generation --config configs/mimic_cxr_report.yaml
-```
+``` -->
 
 ---
 
