@@ -5,7 +5,7 @@
 **📄 Paper:** [Empirical Analysis of Scaling Vision Foundation Models for Chest X-rays (MIDL 2025)](LINK_TO_PAPER)  
 **👨‍⚕️ Authors:** Ahmed Al-Mahrooqi, Prateek Munjal, Ronnie Rajan, Marco AF Pimentel, Praveenkumar Kanithi  
 **📍 Affiliation:** M42, Abu Dhabi  
-**📦 Models:** [CXFormer(S)](https://huggingface.co/m42-health/CXFormer-small), [CXFormer(B)](https://huggingface.co/m42-health/CXFormer-base)
+**📦 Models:** [CXFormer(S)](https://huggingface.co/m42-health/CXFormer-small), [CXFormer(B)](https://huggingface.co/m42-health/CXFormer-base)  
 **🧠 Base Architecture:** Vision Transformers (ViT-S, ViT-B)  
 **📊 Tasks:** Image Classification, Semantic Segmentation, Report Generation
 
@@ -205,4 +205,4 @@ For questions/suggetions, feel free to reach out at [pmunjal@m42.ae](mailto:pmun
 
 ---
 
-Built with ❤️ by the M42 AI Research team.
+Built with ❤️ by the M42 AI Health team.
