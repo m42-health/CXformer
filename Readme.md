@@ -1,11 +1,11 @@
-# CheXformer: Scalable Vision Foundation Models for Chest X-rays
+# CXFormer: Scalable Vision Foundation Models for Chest X-rays
 
-![CheXformer](readme_fig/overview.png) <!-- Placeholder for a banner image -->
+![CXFormer](figures/overview.png) <!-- Placeholder for a banner image -->
 
 **📄 Paper:** [Empirical Analysis of Scaling Vision Foundation Models for Chest X-rays (MIDL 2025)](LINK_TO_PAPER)  
 **👨‍⚕️ Authors:** Ahmed Al-Mahrooqi, Prateek Munjal, Ronnie Rajan, Marco AF Pimentel, Praveenkumar Kanithi  
 **📍 Affiliation:** M42, Abu Dhabi  
-**📦 Models:** CheXformer(S), CheXformer(B)  
+**📦 Models:** CXFormer(S), CXFormer(B)  
 **🧠 Base Architecture:** Vision Transformers (ViT-S, ViT-B)  
 **📊 Tasks:** Image Classification, Semantic Segmentation, Report Generation
 
@@ -13,13 +13,13 @@
 
 ## 🔬 Overview
 
-**CheXformer** is a self-supervised foundation model family tailored for **Chest X-ray (CXR)** analysis. Built on top of DINOv2 and adapted with domain-specific optimizations, CheXformer delivers **SOTA** performance on multiple medical imaging tasks while being compute-efficient.
+**CXFormer** is a self-supervised foundation model family tailored for **Chest X-ray (CXR)** analysis. Built on top of DINOv2 and adapted with domain-specific optimizations, CXFormer delivers **SOTA** performance on multiple medical imaging tasks while being compute-efficient.
 
 Key Contributions:
 - Register-enhanced ViT with fewer prototype heads
 - Self-supervised pretraining on 600K+ CXRs from 5 global datasets
 - Strong generalization across 3 core tasks: classification, segmentation, and report generation
-- Lightweight CheXformer(S) matches RAD-DINO with 7× less compute
+- Lightweight CXFormer(S) matches RAD-DINO with 7× less compute
 - Released on HuggingFace and open-sourced for reproducibility
 
 ---
@@ -28,8 +28,8 @@ Key Contributions:
 
 | Model      | Params | Pretrain Compute (FLOPs) | Mean AUROC | HuggingFace Model Card |
 |------------|--------|---------------------------|-------------|-------------------------|
-| CheXformer(S)  | 22M    | 3.63 ExaFLOPs             | 86.05%      | `[link-to-CheXformer-s]`    |
-| CheXformer(B)  | 87M    | 14.42 ExaFLOPs            | **87.93%**  | `[link-to-CheXformer-b]`    |
+| CXFormer(S)  | 22M    | 3.63 ExaFLOPs             | 86.05%      | `[link-to-CXFormer-s]`    |
+| CXFormer(B)  | 87M    | 14.42 ExaFLOPs            | **87.93%**  | `[link-to-CXFormer-b]`    |
 
 > 📌 Note: Both models are trained solely on image data—no text supervision.
 
@@ -58,29 +58,79 @@ Key Contributions:
 ### 🔧 Installation
 
 ```bash
-git clone https://github.com/YOUR_ORG/CheXformer.git
-cd CheXformer
+git clone https://github.com/m42-health/CXFormer.git
+cd CXFormer
 pip install -r requirements.txt
 ```
 
-> You will need access to NVIDIA H100/A100 GPUs for optimal training.
+---
+
+### 🏋️‍♀️ Continual Pretraining from DINOv2
+
+```bash
+sh scripts/pretrain/cxformer_slurm_submitit.sh
+```
+<details>
+  <summary><i>This script internally runs the following:</i></summary>
+
+```bash
+export PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:256 # to reduce fragmentation
+
+n_nodes=1
+
+cfg_file=dinov2/configs/pretrain/chexformer_small.yaml
+
+PYTHONPATH=. python dinov2/run/train/train.py \
+--nodes $n_nodes \
+--nodelist "worker-13" \
+--config-file $cfg_file \
+--output-dir output_ablations_new/pretrain/chexformer_small_slurm/
+```
+</details>
 
 ---
 
-### 🏋️‍♀️ Pretraining from DINOv2
+### 🎯 Fine-Tuning on Downstream Tasks
+
+You can fine-tune **CXFormer** on downstream image classification tasks such as **CheXpert** using the provided shell script.
+
+#### 🚀 Run Image classification finetuning (CheXpert Dataset)
 
 ```bash
-python train_pretrain.py --config configs/CheXformer_pretrain.yaml
+sh scripts/finetuning/ft_CXFormer_chexpert.sh
 ```
-
----
-
-### 🎯 Finetuning on Downstream Tasks
+<details>
+  <summary><i>This script internally runs the following:</i></summary>
 
 ```bash
-# Image classification
-sh scripts/finetuning/ft_CheXformer_chexpert.sh
+export CUDA_VISIBLE_DEVICES=0
+n_epochs=100
+pretrained_wt="m42-health/Scan42-small"
+
+PYTHONPATH=. deepspeed dinov2/train/cxr_finetune.py \
+  --config-file dinov2/configs/downstream/classification/CXFormer_chexpert_small.yaml \
+  --output-dir output_ablations_new/finetune/CXFormer_chexpert \
+  --exp-name ft_CXFormer \
+  --pretrained-weights $pretrained_wt \
+  --model-type dinov2 \
+  --num-epochs $n_epochs \
+  --batch-size 10 \
+  --num_workers 1 \
+  --seed 7479 \
+  --cls-n-layers 4 \
+  --apply-avgpool \
+  --clf_lr 5e-5 \
+  --backbone_lr 5e-7
 ```
+
+📁 Output
+The fine-tuned model, logs, and metrics will be saved in:
+```
+output_ablations_new/finetune/CXFormer_chexpert/
+```
+</details>
+
+
 ```bash
 # Segmentation
 # python train_finetune.py --task segmentation --config configs/chexmask.yaml
@@ -98,33 +148,33 @@ sh scripts/finetuning/ft_CheXformer_chexpert.sh
 ### 🩻 Classification (AUROC)
 | Model       | CheXpert | RSNA | NIH-CXR8 | VinDr | Avg. |
 |-------------|----------|------|----------|-------|------|
-| CheXformer(S)   | 83.34    | 91.13| 83.68    | 46.03 (AUPRC) | 86.05 |
-| **CheXformer(B)** | **86.80** | **91.71** | **85.28** | **48.02 (AUPRC)** | **87.93** |
+| CXFormer(S)   | 83.34    | 91.13| 83.68    | 46.03 (AUPRC) | 86.05 |
+| **CXFormer(B)** | **86.80** | **91.71** | **85.28** | **48.02 (AUPRC)** | **87.93** |
 
 ### 🫁 Segmentation (Dice Score)
 | Model       | Lungs | Heart | Avg. |
 |-------------|-------|-------|------|
-| CheXformer(S)   | 91.69 | 89.35 | 90.52 |
-| **CheXformer(B)** | 91.94 | 89.94 | 90.94 |
+| CXFormer(S)   | 91.69 | 89.35 | 90.52 |
+| **CXFormer(B)** | 91.94 | 89.94 | 90.94 |
 
 ### 📄 Report Generation (MIMIC-CXR)
 | Model       | ROUGE-L | BLEU-4 | RGER | F1-14 | Avg. |
 |-------------|----------|--------|------|--------|-------|
-| **CheXformer(S)** | **25.25** | **9.11** | **23.06** | 33.85 | 27.51 |
-| CheXformer(B)   | 24.93   | 9.03   | 22.94 | 33.45 | 27.16 |
+| **CXFormer(S)** | **25.25** | **9.11** | **23.06** | 33.85 | 27.51 |
+| CXFormer(B)   | 24.93   | 9.03   | 22.94 | 33.45 | 27.16 |
 
 ---
 
 ## 🗂 Repo Structure
 
 ```
-CheXformer/
+CXFormer/
 ├── configs/                     # YAML configs for training
 ├── models/                      # Vision encoders & heads
 ├── data/                        # Dataset preparation scripts
-├── train/train_cxr.py            # Pretraining script
-├── train/CheXformer_finetune.py            # Finetuning script
-├── eval/                        # Evaluation tools per task
+├── dinov2/train/cxr_pretrain.py           # Pretraining script
+├── dinov2/train/cxr_finetune.py           # Finetuning script (Img clf)
+├── dinov2/train/cxr_segmentation.py       # Finetuning script (Img Seg)
 └── README.md
 ```
 
@@ -133,7 +183,7 @@ CheXformer/
 ## 📜 Citation
 
 ```bibtex
-@inproceedings{CheXformer_2025,
+@inproceedings{CXFormer_2025,
   title={Empirical Analysis of Scaling Vision Foundation Models for Chest X-rays},
   author={Al-Mahrooqi, Ahmed and Munjal, Prateek and Rajan, Ronnie and Pimentel, Marco AF and Kanithi, Praveenkumar},
   booktitle={Medical Imaging with Deep Learning (MIDL)},
