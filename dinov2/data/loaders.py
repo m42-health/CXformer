@@ -6,7 +6,8 @@
 import logging
 from enum import Enum
 from typing import Any, Callable, List, Optional, TypeVar, Dict
-from cxr_data import CXRDataset
+# from cxr_data import CXRDataset
+from dinov2.cxr_data import CXRDataset
 import torch
 from torch.utils.data import Sampler,ConcatDataset
 from omegaconf import OmegaConf
