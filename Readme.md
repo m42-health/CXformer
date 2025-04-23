@@ -1,6 +1,6 @@
 # CheXformer: Scalable Vision Foundation Models for Chest X-rays
 
-![CheXformer](assets/CheXformer_banner.png) <!-- Placeholder for a banner image -->
+![CheXformer](readme_fig/overview.png) <!-- Placeholder for a banner image -->
 
 **📄 Paper:** [Empirical Analysis of Scaling Vision Foundation Models for Chest X-rays (MIDL 2025)](LINK_TO_PAPER)  
 **👨‍⚕️ Authors:** Ahmed Al-Mahrooqi, Prateek Munjal, Ronnie Rajan, Marco AF Pimentel, Praveenkumar Kanithi  
