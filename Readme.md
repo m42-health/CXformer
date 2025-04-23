@@ -5,7 +5,7 @@
 **📄 Paper:** [Empirical Analysis of Scaling Vision Foundation Models for Chest X-rays (MIDL 2025)](LINK_TO_PAPER)  
 **👨‍⚕️ Authors:** Ahmed Al-Mahrooqi, Prateek Munjal, Ronnie Rajan, Marco AF Pimentel, Praveenkumar Kanithi  
 **📍 Affiliation:** M42, Abu Dhabi  
-**📦 Models:** CXFormer(S), CXFormer(B)  
+**📦 Models:** [CXFormer(S)](https://huggingface.co/m42-health/CXFormer-small), [CXFormer(B)](https://huggingface.co/m42-health/CXFormer-base)
 **🧠 Base Architecture:** Vision Transformers (ViT-S, ViT-B)  
 **📊 Tasks:** Image Classification, Semantic Segmentation, Report Generation
 
@@ -28,8 +28,8 @@ Key Contributions:
 
 | Model      | Params | Pretrain Compute (FLOPs) | Mean AUROC | HuggingFace Model Card |
 |------------|--------|---------------------------|-------------|-------------------------|
-| CXFormer(S)  | 22M    | 3.63 ExaFLOPs             | 86.05%      | `[link-to-CXFormer-s]`    |
-| CXFormer(B)  | 87M    | 14.42 ExaFLOPs            | **87.93%**  | `[link-to-CXFormer-b]`    |
+| CXFormer(S)  | 22M    | 3.63 ExaFLOPs             | 86.05%      | [Huggingface Link](https://huggingface.co/m42-health/CXFormer-small)|
+| CXFormer(B)  | 87M    | 14.42 ExaFLOPs            | **87.93%**  | [Huggingface Link](https://huggingface.co/m42-health/CXFormer-base) |
 
 > 📌 Note: Both models are trained solely on image data—no text supervision.
 
@@ -105,7 +105,7 @@ sh scripts/finetuning/image_classification/ft_CXFormer_chexpert.sh
 ```bash
 export CUDA_VISIBLE_DEVICES=0
 n_epochs=100
-pretrained_wt="m42-health/Scan42-small"
+pretrained_wt="m42-health/CXFormer-small"
 
 PYTHONPATH=. deepspeed dinov2/train/cxr_finetune.py \
   --config-file dinov2/configs/downstream/classification/CXFormer_chexpert_small.yaml \
@@ -172,13 +172,16 @@ We refer interested readers to llava repo as we straightaway used it in our work
 
 ```
 CXFormer/
-├── configs/                     # YAML configs for training
-├── models/                      # Vision encoders & heads
-├── data/                        # Dataset preparation scripts
-├── dinov2/train/cxr_pretrain.py           # Pretraining script
-├── dinov2/train/cxr_finetune.py           # Finetuning script (Img clf)
-├── dinov2/train/cxr_segmentation.py       # Finetuning script (Img Seg)
-└── README.md
+├── configs/                              # YAML configuration files
+├── models/                               # Vision backbone encoders and heads
+├── dinov2/
+│   ├── data/                             # Data loading utilities
+│   ├── cxr_data/                         # Custom dataset classes and preprocessing logic for chest X-rays
+│   └── train/
+│       ├── cxr_pretrain.py              # Pretraining script
+│       ├── cxr_finetune.py              # Finetuning script for image classification
+│       └── cxr_segmentation.py          # Finetuning script for image segmentation
+└── README.md                            # Project overview
 ```
 
 ---

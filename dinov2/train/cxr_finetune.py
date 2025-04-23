@@ -14,6 +14,7 @@ from dinov2.models.chexzero_vit import VisualTransformer
 from transformers import AutoModel
 from open_clip import create_model_from_pretrained
 from finetune_utils import get_datasets, LinearClassifier, Dinov2ForClassification, CustomDataCollator, CustomTrainer
+from dinov2.train.io_utils import transfer_weights
 
 def main(args):
     torch.manual_seed(args.seed)
@@ -58,14 +59,22 @@ def main(args):
         model = AutoModel.from_pretrained(args.pretrained_weights)
         model_dim = model.config.hidden_size
     elif args.model_type == "dinov2":
-        
         model, model_dim = build_model_from_cfg(cfg, only_teacher=True)
-        checkpoint = torch.load(args.pretrained_weights)
-        if 'teacher' in checkpoint:
-            checkpoint = checkpoint['teacher']
-            checkpoint = {k.replace("backbone.", ""): v for k, v in checkpoint.items()}
-        backbone_load_response = model.load_state_dict(checkpoint, strict=False)
-        logger.info(f"backbone loaded: {backbone_load_response}")
+        if os.path.exists(args.pretrained_weights):
+            checkpoint = torch.load(args.pretrained_weights)
+            if 'teacher' in checkpoint:
+                checkpoint = checkpoint['teacher']
+                checkpoint = {k.replace("backbone.", ""): v for k, v in checkpoint.items()}
+
+            backbone_load_response = model.load_state_dict(checkpoint, strict=False)
+            logger.info(f"backbone loaded: {backbone_load_response} from local disk !!")
+        else:
+            # Assume it is available on HuggingFace
+            hf_model = AutoModel.from_pretrained(args.pretrained_weights)
+            logger.info(f"backbone loaded from HuggingFace !!")
+            transfer_weights(hf_model, model, num_layers=len(hf_model.encoder.layer))
+
+        
     elif args.model_type == "chexzero":
         model = VisualTransformer(
             input_resolution=224,

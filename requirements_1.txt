@@ -1,0 +1,8 @@
+numpy==1.26.4
+pydicom==2.4.4
+opencv-python==4.9.0.80
+pillow==10.2.0
+pandas==2.2.1
+torchxrayvision==1.2.2
+torchvision==0.17.2
+tqdm==4.66.2

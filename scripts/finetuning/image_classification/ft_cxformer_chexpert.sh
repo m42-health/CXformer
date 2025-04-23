@@ -1,8 +1,8 @@
 export CUDA_VISIBLE_DEVICES=0
 n_epochs=5
 
-# pretrained_wt="/home/prateek/projects/scan42/dinov2_cxr/output_ablations_new/pretrain/scan42_small_slurm/eval/eval_last/teacher_checkpoint.pth"
-pretrained_wt="/models_vision/scan42/scan42-small/pytorch-model/teacher_checkpoint.pth"
+# pretrained_wt="/models_vision/scan42/scan42-small/pytorch-model/teacher_checkpoint.pth"
+pretrained_wt="m42-health/CXFormer-small"
 
 PYTHONPATH=. deepspeed dinov2/train/cxr_finetune.py \
 --config-file dinov2/configs/downstream/classification/chexformer_chexpert_small.yaml \
