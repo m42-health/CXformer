@@ -186,6 +186,17 @@ CXformer/
 
 ---
 
+## License
+
+This project is licensed under CC BY-NC-4.0 - see the [LICENSE.md](./LICENSE.md) file for details.
+
+
+## 📬 Contribution
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+---
+
 ## 📜 Citation
 
 ```bibtex
@@ -197,12 +208,4 @@ CXformer/
 }
 ```
 
----
 
-## 📬 Contact
-
-For questions/suggetions, feel free to reach out at [pmunjal@m42.ae](mailto:pmunjal@m42.ae) or [prateekmunjal31@gmail.com](mailto:prateekmunjal31@gmail.com)
-
----
-
-Built with ❤️ by the M42 AI Health team.
