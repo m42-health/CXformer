@@ -5,9 +5,9 @@ n_epochs=5
 pretrained_wt="m42-health/CXFormer-small"
 
 PYTHONPATH=. deepspeed dinov2/train/cxr_finetune.py \
---config-file dinov2/configs/downstream/classification/chexformer_chexpert_small.yaml \
---output-dir output_ablations_new/finetune/chexformer_chexpert \
---exp-name ft_chexformer \
+--config-file dinov2/configs/downstream/classification/cxformer_chexpert_small.yaml \
+--output-dir output_ablations_new/finetune/cxformer_chexpert \
+--exp-name ft_cxformer \
 --pretrained-weights $pretrained_wt \
 --model-type dinov2 \
 --num-epochs $n_epochs \
