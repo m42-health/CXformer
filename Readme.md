@@ -1,8 +1,19 @@
 # CXformer: Scalable Vision Foundation Models for Chest X-rays
 
-![CXformer](figures/overview.jpg) <!-- Placeholder for a banner image -->
+CXformer is a vision transformer tailored for chest X-ray analysis, adapted from DINOv2 with clinically motivated training modifications. This repository provides code for pretraining CXformer using our optimized pipeline, as well as scripts for finetuning on downstream tasks like classification, segmentation, and report generation.
 
-**📄 Paper:** [Empirical Analysis of Scaling Vision Foundation Models for Chest X-rays (MIDL 2025)](LINK_TO_PAPER)  
+Key highlights:
+- Improved training with register tokens, teacher centering, and optimized attention heads.
+- Self-supervised pretraining on 600K+ CXRs from 5 global datasets.
+- Strong generalization across 3 core tasks: classification, segmentation, and report generation.
+- CXformer(S) matches the performance of RAD-DINO with 7× less training compute (in FLOPS).
+- Models are available on Hugging Face 🤗: [CXformer(B)](https://huggingface.co/m42-health/CXformer-base), [CXformer(S)](https://huggingface.co/m42-health/CXformer-small)
+
+---
+
+![CXformer](figures/overview.jpg) <!-- Placeholder for a banner image -->
+<!-- TODO update paper url-->
+**📄 Paper:** [Empirical Analysis of Scaling Vision Foundation Models for Chest X-rays (MIDL 2025)](https://openreview.net/forum?id=6fqfInxqG1#discussion)  
 **👨‍⚕️ Authors:** Ahmed Al-Mahrooqi, Prateek Munjal, Ronnie Rajan, Marco AF Pimentel, Praveenkumar Kanithi  
 **📍 Affiliation:** M42, Abu Dhabi  
 **📦 Models:** [CXformer(S)](https://huggingface.co/m42-health/CXformer-small), [CXformer(B)](https://huggingface.co/m42-health/CXformer-base)  
@@ -11,18 +22,6 @@
 
 ---
 
-## Abstract
-
-Recent advancements in multimodal transformers have shown remarkable success in computer vision and natural language tasks, yet their adaptation to the clinical world remains challenging. We introduce CXformer, a vision transformer adapted for chest X-ray analysis, through systematic investigation of architectural choices and training modifications from DINOv2. Our empirical results show that using registers in ViT training, centering the teacher model's softmax outputs, and optimizing the number of heads leads to better performance. The small version of CXformer(S) (22M parameters) achieves 83.28\% mean AUROC on CheXpert test set, surpassing the baseline of 80.46\% achieved with vanilla DINOv2 settings. Contrary to common assumptions, our larger model CXformer(B) with 87M parameters shows similar performance at 84\% mean AUROC on CheXpert, suggesting that training optimizations matter more than model size. Furthermore compared to the current state-of-the-art RAD-DINO, our CXformer(B), with 46\% reduced pretraining compute (in FLOPs) achieves an average AUROC of 87.93\% (vs 87.32\% by RAD-DINO) on pathology image classification task evaluated across three widely used CXR datasets i.e. CheXpert, RSNA Pneumonia, and NIH CXR8. Beyond classification, CXformer also delivers competitive, and occasionally superior, performance in semantic segmentation and radiology report generation, underscoring its versatility. By open-sourcing our model checkpoints, we aim to promote reproducibility, reduce resource barriers, and advance scalable solutions for medical imaging research.
-
-Key Contributions:
-- Register-enhanced ViT with fewer prototype heads
-- Self-supervised pretraining on 600K+ CXRs from 5 global datasets
-- Strong generalization across 3 core tasks: classification, segmentation, and report generation
-- Lightweight CXformer(S) matches RAD-DINO with 7× less compute
-- Released on HuggingFace and open-sourced for reproducibility
-
----
 
 ## Model Checkpoints
 
@@ -30,7 +29,7 @@ Key Contributions:
 |------------|--------|---------------------------|-------------|-------------------------|
 | CXformer(S)  | 22M    | 3.63 ExaFLOPs             | 86.05%      | [Huggingface Link](https://huggingface.co/m42-health/CXformer-small)|
 | CXformer(B)  | 87M    | 14.42 ExaFLOPs            | **87.93%**  | [Huggingface Link](https://huggingface.co/m42-health/CXformer-base) |
-
+| RAD-DINO     | 87M    | 26.71 ExaFLOPs            | 87.32       | [Huggingface Link](https://huggingface.co/microsoft/rad-dino) |
 > 📌 Note: Both models are trained solely on image data—no text supervision.
 
 ---
