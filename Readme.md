@@ -66,6 +66,22 @@ pip install -r requirements.txt
 
 ### Continual Pretraining from DINOv2
 
+#### Setting Up Pretrained Weights for DINOv2
+
+Download the DINOv2 pretrained weights from [https://github.com/facebookresearch/dinov2](https://github.com/facebookresearch/dinov2) and update the path in your config file.
+
+For example, if you're using the following script which uses "dinov2/configs/pretrain/cxformer_small.yaml" as config file:
+
+Make sure to set the `pretrained_weights` path under both the `student` and `teacher` sections like this:
+
+```yaml
+student:
+  pretrained_weights: /path/to/dinov2_checkpoint.pth
+
+teacher:
+  pretrained_weights: /path/to/dinov2_checkpoint.pth
+  ```
+
 ```bash
 sh scripts/pretrain/cxformer_slurm_submit.sh
 ```
