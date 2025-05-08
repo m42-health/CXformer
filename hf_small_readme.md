@@ -1,8 +1,3 @@
----
-library_name: transformers
-tags: []
----
-
 # Model Card for CXFormer
 
 ![CXformer Architecture](https://raw.githubusercontent.com/m42-health/CXformer/refs/heads/main/figures/overview.jpg?token=GHSAT0AAAAAAC3YAMZYT6BPW5QYQWJ6OBM62A4TUWQ)
@@ -10,7 +5,6 @@ tags: []
 CXformer is a vision transformer tailored for chest X-ray analysis, adapted from DINOv2 with clinically motivated training modifications. This repository provides code for pretraining CXformer using our optimized pipeline, as well as scripts for finetuning on downstream tasks like classification, segmentation, and report generation.
 For more details on pre-training, please checkout [our paper](link_to_paper).
 
-- **Model Developers**: M42 Health AI Team
 - **Finetuned from model**: [```facebook/dinov2-with-registers-small```](https://huggingface.co/facebook/dinov2-with-registers-small)
 - **License**: [CC-BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/): This work is licensed under CC BY-NC. Additionally, use is limited to research purposes only.
 
@@ -46,22 +40,21 @@ The official training splits were used for CheXpert, MIMIC and NIH, and all avai
 ```python
 from transformers import AutoModel, AutoImageProcessor
 from PIL import Image
-import torch
 
-model_name = 'm42-health/CXformer-base'
+model_name = 'm42-health/CXformer-base' # or "m42-health/CXformer-small"
 
 image_processor = AutoImageProcessor.from_pretrained(model_name,trust_remote_code=True)
 model = AutoModel.from_pretrained(model_name)
 
-# replace with path to X-ray image
-image = Image.open('PATH/TO/XRAY/IMAGE.jpg')
+model.eval()
 
-# preprocess image
+image = Image.open('sample_cxr.png')
+
 image = image_processor(image, return_tensors='pt')
 print(image['pixel_values'].shape) # [1,3,518,518]
 
-# extract image embeddings
-output = model(**image).last_hidden_state
+print("Doing forward...!!")
+output = model(**image).last_hidden_state  # [1, 1374, 768]
 
 ```
 
