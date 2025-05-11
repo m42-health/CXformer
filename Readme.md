@@ -13,7 +13,7 @@ Key highlights:
 
 ![CXformer](figures/overview.jpg) <!-- Placeholder for a banner image -->
 <!-- TODO update paper url-->
-**📄 Paper:** [Empirical Analysis of Scaling Vision Foundation Models for Chest X-rays (MIDL 2025)](https://openreview.net/forum?id=6fqfInxqG1#discussion)  
+**📄 Paper:** [Empirical Analysis of Scaling Vision Foundation Models for Chest X-rays (MIDL 2025)](https://openreview.net/pdf?id=6fqfInxqG1)  
 **👨‍⚕️ Authors:** Ahmed Al-Mahrooqi, Prateek Munjal, Ronnie Rajan, Marco AF Pimentel, Praveenkumar Kanithi  
 **📍 Affiliation:** M42, Abu Dhabi  
 **📦 Models:** [CXformer(S)](https://huggingface.co/m42-health/CXformer-small), [CXformer(B)](https://huggingface.co/m42-health/CXformer-base)  
@@ -215,10 +215,10 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## Citation
 
 ```bibtex
-@inproceedings{CXformer_2025,
+@inproceedings{al2025empirical,
   title={Empirical Analysis of Scaling Vision Foundation Models for Chest X-rays},
-  author={Al-Mahrooqi, Ahmed and Munjal, Prateek and Rajan, Ronnie and Pimentel, Marco AF and Kanithi, Praveenkumar},
-  booktitle={Medical Imaging with Deep Learning (MIDL)},
+  author={Al Mahrooqi, Ahmed and Munjal, Prateek and Rajan, Ronnie and Pimentel, Marco AF and Kanithi, Praveenkumar},
+  booktitle={Medical Imaging with Deep Learning},
   year={2025}
 }
 ```
